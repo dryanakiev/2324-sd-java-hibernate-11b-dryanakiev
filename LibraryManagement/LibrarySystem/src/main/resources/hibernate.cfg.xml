@@ -13,12 +13,12 @@
 
         <!-- Database connection settings -->
         <property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
-        <property name="connection.url">jdbc:sqlserver://TL011T\SQLEXPRESS;databaseName=LibrarySystem;encrypt=true;integratedSecurity=true;</property>
+        <property name="connection.url">jdbc:sqlserver://TL011T\SQLEXPRESS;database=LibrarySystem</property>
         <!--<property name="connection.username">sa</property>
         <property name="connection.password">password</property>-->
 
         <!-- Echo all executed SQL to stdout -->
-        <property name="show_sql">true</property>
+        <property name="show_sql">false</property>
 
         <!-- Create the tables via the entities classes-->
         <property name="hibernate.hbm2ddl.auto">update</property>
@@ -26,6 +26,8 @@
 
         <!-- Names the annotated entity class -->
         <mapping class="librarysystem.DAL.Models.Genre"/>
+        <mapping class="librarysystem.DAL.Models.Author"/>
+        <mapping class="librarysystem.DAL.Models.Book"/>
 
     </session-factory>
 

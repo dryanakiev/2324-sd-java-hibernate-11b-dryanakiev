@@ -1,29 +1,22 @@
 package librarysystem.DAL.Models;
 
-import org.glassfish.jaxb.core.v2.model.core.ID;
-import org.hibernate.annotations.GeneratorType;
+import jakarta.persistence.*;
 
-import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
-@Table(name = "Genres")
+@Table(name = "Genres", schema = "dbo", catalog = "LibrarySystem")
 public class Genre {
-
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "Id", nullable = false)
     private int id;
-
-    @Column(name = "Types")
+    @Basic
+    @Column(name = "Type", nullable = false, length = 50)
     private String type;
-
-    public Genre() {
-
-    }
-
-    public Genre(int id, String type) {
-        this.id = id;
-        this.type = type;
-    }
+    @OneToMany(mappedBy = "genresByGenreId")
+    private Collection<Book> booksById;
 
     public int getId() {
         return id;
@@ -39,5 +32,26 @@ public class Genre {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genre genre = (Genre) o;
+        return id == genre.id && Objects.equals(type, genre.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type);
+    }
+
+    public Collection<Book> getBooksById() {
+        return booksById;
+    }
+
+    public void setBooksById(Collection<Book> booksById) {
+        this.booksById = booksById;
     }
 }

@@ -5,16 +5,15 @@ import org.hibernate.cfg.Configuration;
 
 public class HibernateUtilities {
 
-    public static Session getCurrentSessionFromConfig() {
-        // SessionFactory in Hibernate 5 example
-        Configuration config = new Configuration();
+    public static Session getCurrentSessionFromConfiguration() {
+        Configuration configuration = new Configuration();
 
-        config.configure();
+        Session session;
 
-        // local SessionFactory bean created
-        SessionFactory sessionFactory = config.buildSessionFactory();
+        try (SessionFactory factory = configuration.configure("hibernate.cfg.xml").buildSessionFactory()) {
 
-        Session session = sessionFactory.getCurrentSession();
+            session = factory.getCurrentSession();
+        }
 
         return session;
     }
