@@ -1,20 +1,36 @@
 package librarysystem.utils;
 
 import org.hibernate.*;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtilities {
 
-    public static Session getCurrentSessionFromConfiguration() {
-        Configuration configuration = new Configuration();
+    private static SessionFactory sessionFactory;
+    private static SessionFactory buildSessionFactory() {
+        try {
+            // Create the SessionFactory from hibernate.cfg.xml
+            Configuration configuration = new Configuration();
+            configuration.configure("hibernate.cfg.xml");
+            System.out.println("Hibernate Configuration loaded");
 
-        Session session;
+            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+            System.out.println("Hibernate serviceRegistry created");
 
-        try (SessionFactory factory = configuration.configure("hibernate.cfg.xml").buildSessionFactory()) {
+            SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
-            session = factory.getCurrentSession();
+            return sessionFactory;
         }
+        catch (Throwable ex) {
+            System.err.println("Initial SessionFactory creation failed." + ex);
+            ex.printStackTrace();
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
 
-        return session;
+    public static SessionFactory getSessionFactory() {
+        if(sessionFactory == null) sessionFactory = buildSessionFactory();
+        return sessionFactory;
     }
 }
